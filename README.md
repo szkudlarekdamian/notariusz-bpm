@@ -1,2 +1,4 @@
 # notariusz-bpm
- Projekt na zajęcia z Modelowania i Analizy Procesów Biznesowych
+
+Modele BPMN znajdują się w folderze \src\main\resources
+Projekt na zajęcia z Modelowania i Analizy Procesów Biznesowych
