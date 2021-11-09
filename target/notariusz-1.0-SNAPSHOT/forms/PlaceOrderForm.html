@@ -1,0 +1,28 @@
+<form name="PlaceOrder">
+    <div class="form-group">
+        <label for="contractorName">Contractor name</label>
+        <input class="form-control"
+               id="contractorName"
+               cam-variable-type="String"
+               cam-variable-name="order_contractorName"
+               name="contractorName"/>
+    </div>
+    <div class="form-group">
+        <label for="bedAmount">King size Bed</label>
+        <input class="form-control"
+               type="number"
+               id="bedAmount"
+               cam-variable-type="Integer"
+               cam-variable-name="order_bedAmount"
+               name="bedAmount" min="0" max="10"/>
+    </div>
+    <div class="form-group">
+        <label for="wardrobeAmount">Modular wardrobe</label>
+        <input class="form-control"
+               type="number"
+               id="wardrobeAmount"
+               cam-variable-type="Integer"
+               cam-variable-name="order_wardrobeAmount"
+               name="wardrobeAmount" min="0" max="10"/>
+    </div>
+</form>

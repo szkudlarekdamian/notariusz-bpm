@@ -1,0 +1,61 @@
+<form name="WniosekDarowizna">
+    <div class="form-group">
+        <label for="imie">Imię darczyńcy</label>
+        <input class="form-control"
+               id="imie"
+               cam-variable-type="String"
+               cam-variable-name="darowizna_imie"
+               name="imie" required/>
+    </div>
+    <div class="form-group">
+        <label for="nazwisko">Nazwisko darczyńcy</label>
+        <input class="form-control"
+               id="nazwisko"
+               cam-variable-type="String"
+               cam-variable-name="darowizna_nazwisko"
+               name="nazwisko" required/>
+    </div>
+    <div class="form-group">
+        <label for="rodzina">Czy obdarowywany należy do rodziny?</label>
+        <select class="form-control"
+               id="rodzina"
+               cam-variable-name="darowizna_rodzina"
+               cam-variable-type="Boolean"
+               name="rodzina">
+			<option value="true">Tak</option>
+			<option value="false" selected>Nie</option>
+		</select>
+    </div>
+    
+    
+    
+        <div class="form-group">
+        <label for="rodzaj">Rodzaj darowizny</label>
+        <input class="form-control"
+               id="rodzaj"
+               placeholder="np. nieruchomość lub samochód"
+               cam-variable-type="String"
+               cam-variable-name="darowizna_rodzaj"
+               name="rodzaj" required/>
+    </div>
+    <div class="form-group">
+        <label for="kwota">Szacowana wartość darowizny</label>
+        <input class="form-control"
+               type="number"
+               id="kwota"
+               cam-variable-type="Double"
+               cam-variable-name="darowizna_wartosc"
+               name="kwota" min="0" max="10000000" required/>
+    </div>
+    <div class="form-group">
+        <label for="zadluzenie">Czy darczyńca jest zadłużony w Urzędzie Skarbowym?</label>
+        <select class="form-control"
+               id="zadluzenie"
+               cam-variable-name="darowizna_zadluzenie"
+				cam-variable-type="Boolean"
+               name="zadluzenie">
+			<option value="true">Tak</option>
+			<option value="false" selected>Nie</option>
+		</select>
+    </div>
+</form>

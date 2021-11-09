@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0dvtwqt" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.0.3">
+  <bpmn:collaboration id="Collaboration_0jkqx6i">
+    <bpmn:participant id="notariusz-darowizna" name="Przekazanie darowizny" processRef="Przekazanie_darowizny" />
+  </bpmn:collaboration>
+  <bpmn:process id="Przekazanie_darowizny" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_0p3dsxb">
+      <bpmn:lane id="Lane_1wh8jjn" name="Notariusz">
+        <bpmn:flowNodeRef>ExclusiveGateway_1e7ayun</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>BusinessRuleTask_1fac51p</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>IntermediateThrowEvent_1manddw</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_14peq9s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_0sz229b</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>UserTask_1v00b8m</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_1y8mgkn</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>CallActivity_09r28na</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>BoundaryEvent_1mifhlz</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_0h9l20k</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ScriptTask_1ar9ldu</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_1dv6joi</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1a3ypth" name="Darczyńca">
+        <bpmn:flowNodeRef>StartEvent_1hi20xt</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SubProcess_0mt1p8s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>IntermediateCatchEvent_12o82ey</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_1cy2o2r</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_0f7o16l</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>BoundaryEvent_0v8g8aq</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_12w9jzw</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_1hi20xt" name="Wniosek o przekazanie darowizny" camunda:formKey="embedded:app:forms/WniosekDarowizna.html" camunda:initiator="klient">
+      <bpmn:extensionElements>
+        <camunda:executionListener class="pl.notariusz.LoggingExecutionListener" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_0owo1tp</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1e7ayun" name="Obdarowany i darczyńca należą do rodziny?" default="SequenceFlow_0musmk4">
+      <bpmn:incoming>SequenceFlow_0ww00d9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1q39vqj</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0musmk4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:businessRuleTask id="BusinessRuleTask_1fac51p" name="Obliczenie podatku" camunda:decisionRef="Podatek">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="podatek">
+            <camunda:script scriptFormat="groovy">decisionResult.getSingleResult().getEntry("podatek")</camunda:script>
+          </camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0musmk4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1imyggd</bpmn:outgoing>
+    </bpmn:businessRuleTask>
+    <bpmn:subProcess id="SubProcess_0mt1p8s">
+      <bpmn:incoming>SequenceFlow_0owo1tp</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_19hbfyw</bpmn:outgoing>
+      <bpmn:startEvent id="StartEvent_17f3saj">
+        <bpmn:outgoing>SequenceFlow_1kbn94z</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:exclusiveGateway id="ExclusiveGateway_165sb09" name="Zadłużenie w US?" default="SequenceFlow_0qph04z">
+        <bpmn:incoming>SequenceFlow_1kbn94z</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_0qph04z</bpmn:outgoing>
+        <bpmn:outgoing>SequenceFlow_0xbe1n3</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:endEvent id="EndEvent_0k43gjo">
+        <bpmn:incoming>SequenceFlow_0xbe1n3</bpmn:incoming>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_070j963" errorRef="Error_1whxftl" />
+      </bpmn:endEvent>
+      <bpmn:endEvent id="EndEvent_08rglz5">
+        <bpmn:incoming>SequenceFlow_0qph04z</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="SequenceFlow_0qph04z" name="nie" sourceRef="ExclusiveGateway_165sb09" targetRef="EndEvent_08rglz5" />
+      <bpmn:sequenceFlow id="SequenceFlow_0xbe1n3" name="tak" sourceRef="ExclusiveGateway_165sb09" targetRef="EndEvent_0k43gjo">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${darowizna_zadluzenie}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="SequenceFlow_1kbn94z" sourceRef="StartEvent_17f3saj" targetRef="ExclusiveGateway_165sb09" />
+    </bpmn:subProcess>
+    <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_1manddw" name="Zawiadomienie klienta">
+      <bpmn:incoming>SequenceFlow_0j49566</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_13r4wgl</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1ri2dh6" messageRef="zawiadomienie_start_id" camunda:class="pl.notariusz.ZawiadomienieRequest" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_12o82ey" name="Oczekiwanie na ofertę">
+      <bpmn:incoming>SequenceFlow_13r4wgl</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_13vouy9</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0l1cmsb" messageRef="zawiadomienie_koniec_id" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1cy2o2r" name="Oferta przyjęta?" default="SequenceFlow_01aqgyt">
+      <bpmn:incoming>SequenceFlow_13vouy9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0iqzl21</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_01aqgyt</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_14peq9s" name="Czy wartość darowizny poprawna?" default="SequenceFlow_0wtfy3u">
+      <bpmn:incoming>SequenceFlow_19hbfyw</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0wtfy3u</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_14hx4sa</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="EndEvent_0sz229b" name="Niepoprawna wartość darowizny">
+      <bpmn:extensionElements>
+        <camunda:executionListener class="pl.notariusz.LoggingExecutionListener" event="end" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_14hx4sa</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_06mx9ne" errorRef="Error_0791kzf" />
+    </bpmn:endEvent>
+    <bpmn:endEvent id="EndEvent_0f7o16l" name="Oferta odrzucona">
+      <bpmn:extensionElements>
+        <camunda:executionListener class="pl.notariusz.LoggingExecutionListener" event="end" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_01aqgyt</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="UserTask_1v00b8m" name="Podpis pod aktem notarialnym" camunda:assignee="${klient}">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="darowizna_imie" label="Imie" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="darowizna_nazwisko" label="Nazwisko" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="darowizna_rodzaj" label="Rodzaj darowizny" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="podpis" label="Podpis" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0iqzl21</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1d35t57</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:boundaryEvent id="BoundaryEvent_0v8g8aq" attachedToRef="SubProcess_0mt1p8s">
+      <bpmn:outgoing>SequenceFlow_1ygxi3j</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_11gefwd" errorRef="Error_1whxftl" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1d35t57" sourceRef="UserTask_1v00b8m" targetRef="CallActivity_09r28na" />
+    <bpmn:sequenceFlow id="SequenceFlow_1imyggd" sourceRef="BusinessRuleTask_1fac51p" targetRef="ScriptTask_1ar9ldu" />
+    <bpmn:sequenceFlow id="SequenceFlow_1q39vqj" name="tak" sourceRef="ExclusiveGateway_1e7ayun" targetRef="ScriptTask_1ar9ldu">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${darowizna_rodzina}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0j49566" sourceRef="ScriptTask_1ar9ldu" targetRef="IntermediateThrowEvent_1manddw" />
+    <bpmn:sequenceFlow id="SequenceFlow_0wtfy3u" name="tak" sourceRef="ExclusiveGateway_14peq9s" targetRef="Task_1dv6joi" />
+    <bpmn:sequenceFlow id="SequenceFlow_14hx4sa" name="nie" sourceRef="ExclusiveGateway_14peq9s" targetRef="EndEvent_0sz229b">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${darowizna_wartosc&lt;=0}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0ww00d9" sourceRef="Task_1dv6joi" targetRef="ExclusiveGateway_1e7ayun" />
+    <bpmn:sequenceFlow id="SequenceFlow_13vouy9" sourceRef="IntermediateCatchEvent_12o82ey" targetRef="ExclusiveGateway_1cy2o2r" />
+    <bpmn:sequenceFlow id="SequenceFlow_0iqzl21" name="tak" sourceRef="ExclusiveGateway_1cy2o2r" targetRef="UserTask_1v00b8m">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${zgoda}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1ygxi3j" sourceRef="BoundaryEvent_0v8g8aq" targetRef="EndEvent_12w9jzw" />
+    <bpmn:sequenceFlow id="SequenceFlow_13r4wgl" sourceRef="IntermediateThrowEvent_1manddw" targetRef="IntermediateCatchEvent_12o82ey" />
+    <bpmn:sequenceFlow id="SequenceFlow_01aqgyt" name="nie" sourceRef="ExclusiveGateway_1cy2o2r" targetRef="EndEvent_0f7o16l" />
+    <bpmn:sequenceFlow id="SequenceFlow_0musmk4" name="nie" sourceRef="ExclusiveGateway_1e7ayun" targetRef="BusinessRuleTask_1fac51p" />
+    <bpmn:sequenceFlow id="SequenceFlow_0owo1tp" sourceRef="StartEvent_1hi20xt" targetRef="SubProcess_0mt1p8s" />
+    <bpmn:endEvent id="EndEvent_12w9jzw" name="Darowizna niemożliwa ze względu na zadłużenie w US">
+      <bpmn:extensionElements>
+        <camunda:executionListener class="pl.notariusz.LoggingExecutionListener" event="end" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1ygxi3j</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_19hbfyw" sourceRef="SubProcess_0mt1p8s" targetRef="ExclusiveGateway_14peq9s" />
+    <bpmn:endEvent id="EndEvent_1y8mgkn" name="Darowizna przekazana">
+      <bpmn:extensionElements>
+        <camunda:executionListener class="pl.notariusz.LoggingExecutionListener" event="end" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_070ier0</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_070ier0" sourceRef="CallActivity_09r28na" targetRef="EndEvent_1y8mgkn" />
+    <bpmn:callActivity id="CallActivity_09r28na" name="Finalizowanie darowizny" calledElement="Finalizowanie">
+      <bpmn:extensionElements>
+        <camunda:in source="darowizna_rodzaj" target="darowizna_rodzaj" />
+        <camunda:in source="podpis" target="podpis" />
+        <camunda:in source="darowizna_imie" target="imie" />
+        <camunda:in source="darowizna_nazwisko" target="nazwisko" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1d35t57</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_070ier0</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:boundaryEvent id="BoundaryEvent_1mifhlz" attachedToRef="CallActivity_09r28na">
+      <bpmn:outgoing>SequenceFlow_11c4xoj</bpmn:outgoing>
+      <bpmn:errorEventDefinition errorRef="podpis_falszywy" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_11c4xoj" sourceRef="BoundaryEvent_1mifhlz" targetRef="EndEvent_0h9l20k" />
+    <bpmn:endEvent id="EndEvent_0h9l20k" name="Darowizna nieprzekazana">
+      <bpmn:extensionElements>
+        <camunda:executionListener class="pl.notariusz.LoggingExecutionListener" event="end" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_11c4xoj</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:scriptTask id="ScriptTask_1ar9ldu" name="Obliczenie  prowizji" scriptFormat="groovy" camunda:resultVariable="prowizja">
+      <bpmn:incoming>SequenceFlow_1imyggd</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1q39vqj</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0j49566</bpmn:outgoing>
+      <bpmn:script>${darowizna_wartosc}*0.002+500</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:manualTask id="Task_1dv6joi" name="Sporządzenie dokumentacji wstepnej">
+      <bpmn:incoming>SequenceFlow_0wtfy3u</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ww00d9</bpmn:outgoing>
+    </bpmn:manualTask>
+  </bpmn:process>
+  <bpmn:message id="zawiadomienie_start_id" name="Zawiadomienie Start" />
+  <bpmn:message id="zawiadomienie_koniec_id" name="Zawiadomienie Koniec" />
+  <bpmn:error id="Error_1whxftl" name="zadluzenie_us" errorCode="500" />
+  <bpmn:error id="Error_0791kzf" name="niepoprawna_wartosc" errorCode="501" />
+  <bpmn:error id="podpis_falszywy" name="podpis_falszywy" errorCode="503" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0jkqx6i">
+      <bpmndi:BPMNShape id="Participant_1vsik6w_di" bpmnElement="notariusz-darowizna">
+        <dc:Bounds x="-932" y="-314" width="1607" height="778" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1wh8jjn_di" bpmnElement="Lane_1wh8jjn">
+        <dc:Bounds x="-902" y="115" width="1577" height="349" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1a3ypth_di" bpmnElement="Lane_1a3ypth">
+        <dc:Bounds x="-902" y="-314" width="1577" height="429" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1hi20xt_di" bpmnElement="StartEvent_1hi20xt">
+        <dc:Bounds x="-872" y="-84" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-884" y="-41" width="60" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_1e7ayun_di" bpmnElement="ExclusiveGateway_1e7ayun" isMarkerVisible="true">
+        <dc:Bounds x="-369" y="259" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-316" y="264" width="87" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BusinessRuleTask_1fac51p_di" bpmnElement="BusinessRuleTask_1fac51p">
+        <dc:Bounds x="-264" y="154" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CallActivity_09r28na_di" bpmnElement="CallActivity_09r28na">
+        <dc:Bounds x="116" y="202" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubProcess_0mt1p8s_di" bpmnElement="SubProcess_0mt1p8s" isExpanded="true">
+        <dc:Bounds x="-794" y="-156" width="270" height="220" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateThrowEvent_1manddw_di" bpmnElement="IntermediateThrowEvent_1manddw">
+        <dc:Bounds x="-102" y="346" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-120" y="389" width="74" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_12o82ey_di" bpmnElement="IntermediateCatchEvent_12o82ey">
+        <dc:Bounds x="-102" y="-64" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-123" y="-89.5" width="79" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_1cy2o2r_di" bpmnElement="ExclusiveGateway_1cy2o2r" isMarkerVisible="true">
+        <dc:Bounds x="141" y="-71" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="127" y="-95" width="79" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_14peq9s_di" bpmnElement="ExclusiveGateway_14peq9s" isMarkerVisible="true">
+        <dc:Bounds x="-479" y="149" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-425" y="154" width="61" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0sz229b_di" bpmnElement="EndEvent_0sz229b">
+        <dc:Bounds x="-592" y="156" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-619" y="199" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ScriptTask_1ar9ldu_di" bpmnElement="ScriptTask_1ar9ldu">
+        <dc:Bounds x="-264" y="324" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1y8mgkn_di" bpmnElement="EndEvent_1y8mgkn">
+        <dc:Bounds x="148" y="316" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="138" y="359" width="58" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0f7o16l_di" bpmnElement="EndEvent_0f7o16l">
+        <dc:Bounds x="248" y="-64" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="223" y="-21" width="86" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_1v00b8m_di" bpmnElement="UserTask_1v00b8m">
+        <dc:Bounds x="116" y="84" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_0v8g8aq_di" bpmnElement="BoundaryEvent_0v8g8aq">
+        <dc:Bounds x="-682" y="-174" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1d35t57_di" bpmnElement="SequenceFlow_1d35t57">
+        <di:waypoint x="166" y="164" />
+        <di:waypoint x="166" y="202" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1imyggd_di" bpmnElement="SequenceFlow_1imyggd">
+        <di:waypoint x="-194" y="234" />
+        <di:waypoint x="-194" y="324" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1q39vqj_di" bpmnElement="SequenceFlow_1q39vqj">
+        <di:waypoint x="-344" y="309" />
+        <di:waypoint x="-344" y="364" />
+        <di:waypoint x="-264" y="364" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-336" y="335" width="16" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0j49566_di" bpmnElement="SequenceFlow_0j49566">
+        <di:waypoint x="-164" y="364" />
+        <di:waypoint x="-102" y="364" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0wtfy3u_di" bpmnElement="SequenceFlow_0wtfy3u">
+        <di:waypoint x="-454" y="199" />
+        <di:waypoint x="-454" y="244" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-447" y="219" width="16" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_14hx4sa_di" bpmnElement="SequenceFlow_14hx4sa">
+        <di:waypoint x="-479" y="174" />
+        <di:waypoint x="-556" y="174" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-524.5" y="156" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ww00d9_di" bpmnElement="SequenceFlow_0ww00d9">
+        <di:waypoint x="-404" y="284" />
+        <di:waypoint x="-369" y="284" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_13vouy9_di" bpmnElement="SequenceFlow_13vouy9">
+        <di:waypoint x="-66" y="-46" />
+        <di:waypoint x="141" y="-46" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0iqzl21_di" bpmnElement="SequenceFlow_0iqzl21">
+        <di:waypoint x="166" y="-21" />
+        <di:waypoint x="166" y="84" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="138" y="22.5" width="16" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1ygxi3j_di" bpmnElement="SequenceFlow_1ygxi3j">
+        <di:waypoint x="-664" y="-174" />
+        <di:waypoint x="-664" y="-256" />
+        <di:waypoint x="-592" y="-256" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_13r4wgl_di" bpmnElement="SequenceFlow_13r4wgl">
+        <di:waypoint x="-84" y="346" />
+        <di:waypoint x="-84" y="-28" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_01aqgyt_di" bpmnElement="SequenceFlow_01aqgyt">
+        <di:waypoint x="191" y="-46" />
+        <di:waypoint x="248" y="-46" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="208" y="-37" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0musmk4_di" bpmnElement="SequenceFlow_0musmk4">
+        <di:waypoint x="-344" y="259" />
+        <di:waypoint x="-344" y="194" />
+        <di:waypoint x="-264" y="194" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-336" y="224" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0owo1tp_di" bpmnElement="SequenceFlow_0owo1tp">
+        <di:waypoint x="-836" y="-66" />
+        <di:waypoint x="-794" y="-66" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="StartEvent_17f3saj_di" bpmnElement="StartEvent_17f3saj">
+        <dc:Bounds x="-774" y="-74" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_165sb09_di" bpmnElement="ExclusiveGateway_165sb09" isMarkerVisible="true">
+        <dc:Bounds x="-699" y="-81" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-639" y="-63" width="90" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0k43gjo_di" bpmnElement="EndEvent_0k43gjo">
+        <dc:Bounds x="-582" y="-134" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_08rglz5_di" bpmnElement="EndEvent_08rglz5">
+        <dc:Bounds x="-582" y="-4" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0qph04z_di" bpmnElement="SequenceFlow_0qph04z">
+        <di:waypoint x="-674" y="-31" />
+        <di:waypoint x="-674" y="14" />
+        <di:waypoint x="-582" y="14" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-666" y="-11" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0xbe1n3_di" bpmnElement="SequenceFlow_0xbe1n3">
+        <di:waypoint x="-674" y="-81" />
+        <di:waypoint x="-674" y="-116" />
+        <di:waypoint x="-582" y="-116" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-666" y="-100.5" width="16" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1kbn94z_di" bpmnElement="SequenceFlow_1kbn94z">
+        <di:waypoint x="-738" y="-56" />
+        <di:waypoint x="-699" y="-56" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_0t470jp_di" bpmnElement="EndEvent_12w9jzw">
+        <dc:Bounds x="-592" y="-274" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-615" y="-231" width="82" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_19hbfyw_di" bpmnElement="SequenceFlow_19hbfyw">
+        <di:waypoint x="-524" y="-46" />
+        <di:waypoint x="-454" y="-46" />
+        <di:waypoint x="-454" y="149" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_070ier0_di" bpmnElement="SequenceFlow_070ier0">
+        <di:waypoint x="166" y="282" />
+        <di:waypoint x="166" y="316" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BoundaryEvent_1kv640q_di" bpmnElement="BoundaryEvent_1mifhlz">
+        <dc:Bounds x="198" y="264" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0h9l20k_di" bpmnElement="EndEvent_0h9l20k">
+        <dc:Bounds x="306" y="264" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="289" y="307" width="73" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_11c4xoj_di" bpmnElement="SequenceFlow_11c4xoj">
+        <di:waypoint x="234" y="282" />
+        <di:waypoint x="306" y="282" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ManualTask_0amb1pt_di" bpmnElement="Task_1dv6joi">
+        <dc:Bounds x="-504" y="244" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

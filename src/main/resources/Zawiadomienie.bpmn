@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_10zcjtp" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.0.3">
+  <bpmn:process id="Zawiadomienie" name="Zawiadomienie" isExecutable="true">
+    <bpmn:startEvent id="zawiadomienie_start" name="Zawiadomienie klienta" camunda:initiator="klient">
+      <bpmn:outgoing>Flow_1220z70</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="zawiadomienie_start_id" />
+    </bpmn:startEvent>
+    <bpmn:intermediateCatchEvent id="Telefon" name="Połączenie telefoniczne">
+      <bpmn:incoming>Flow_1220z70</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0n4wzoj</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1inoyut">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT2S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="zawiadomienie_koniec" name="Klient powiadomiony">
+      <bpmn:incoming>SequenceFlow_1x6n44v</bpmn:incoming>
+      <bpmn:messageEventDefinition messageRef="zawiadomienie_koniec_id" camunda:class="pl.notariusz.ZawiadomienieCallback" />
+    </bpmn:endEvent>
+    <bpmn:userTask id="Decyzja" name="Decyzja w sprawie oferty" camunda:assignee="${klient}">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="podatek" label="Podatek od darowizny" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="prowizja" label="Prowizja" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="zgoda" label="Zgoda" type="boolean" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0n4wzoj</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1x6n44v</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1x6n44v" sourceRef="Decyzja" targetRef="zawiadomienie_koniec" />
+    <bpmn:sequenceFlow id="SequenceFlow_0n4wzoj" sourceRef="Telefon" targetRef="Decyzja" />
+    <bpmn:sequenceFlow id="Flow_1220z70" sourceRef="zawiadomienie_start" targetRef="Telefon" />
+  </bpmn:process>
+  <bpmn:message id="zawiadomienie_start_id" name="Zawiadomienie Start" />
+  <bpmn:message id="zawiadomienie_koniec_id" name="Zawiadomienie Koniec" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Zawiadomienie">
+      <bpmndi:BPMNShape id="Event_19st1hn_di" bpmnElement="zawiadomienie_start">
+        <dc:Bounds x="179" y="79" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="160" y="122" width="74" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_041kil6_di" bpmnElement="Telefon">
+        <dc:Bounds x="272" y="79" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="264" y="122" width="59" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1k3h3gz_di" bpmnElement="zawiadomienie_koniec">
+        <dc:Bounds x="644" y="79" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="628" y="122" width="71" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_0z15r3i_di" bpmnElement="Decyzja">
+        <dc:Bounds x="437" y="57" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1x6n44v_di" bpmnElement="SequenceFlow_1x6n44v">
+        <di:waypoint x="537" y="97" />
+        <di:waypoint x="644" y="97" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0n4wzoj_di" bpmnElement="SequenceFlow_0n4wzoj">
+        <di:waypoint x="308" y="97" />
+        <di:waypoint x="437" y="97" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1220z70_di" bpmnElement="Flow_1220z70">
+        <di:waypoint x="215" y="97" />
+        <di:waypoint x="272" y="97" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

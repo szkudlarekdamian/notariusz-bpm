@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd" id="Definitions_09iakfn" name="DRD" namespace="http://camunda.org/schema/1.0/dmn">
+  <decision id="Podatek" name="Obliczenie podatku">
+    <decisionTable id="decisionTable_1" hitPolicy="FIRST">
+      <input id="input_1" label="Rodzaj darowizny">
+        <inputExpression id="inputExpression_1" typeRef="string">
+          <text>${darowizna_rodzaj}</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_11mv1k5" label="Wartość darowizny">
+        <inputExpression id="LiteralExpression_1bovoye" typeRef="double">
+          <text>${darowizna_wartosc}</text>
+        </inputExpression>
+      </input>
+      <output id="output_1" label="Podatek" name="podatek" typeRef="double" />
+      <rule id="DecisionRule_0yvuzuc">
+        <inputEntry id="UnaryTests_1i5opbt">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1f1seb6">
+          <text>&lt;10000</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1ni8gxf">
+          <text>0</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0lfm11i">
+        <inputEntry id="UnaryTests_0urmp4v">
+          <text>"samochód"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1tf1bo3">
+          <text>&gt;=10000</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0o900c7">
+          <text>darowizna_wartosc*0.06</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1jb0xyt">
+        <inputEntry id="UnaryTests_0yxddh2">
+          <text>"nieruchomość"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_00u3j6y">
+          <text>&lt;150000</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_04ex1u5">
+          <text>0</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1jliehq">
+        <inputEntry id="UnaryTests_1ilg3hz">
+          <text>"nieruchomość"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0edof2w">
+          <text>&gt;=150000</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1c6ultz">
+          <text>darowizna_wartosc*0.02</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_188ve3f">
+        <inputEntry id="UnaryTests_00gufzz">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1l8fpf2">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0qu1x6v">
+          <text>darowizna_wartosc*0.08</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>
